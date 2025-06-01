@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:ajheryuk/models/carousels.dart';
+import 'package:ajheryuk/screens/detail_card_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,88 +125,128 @@ Widget _cardCourseItems(BuildContext context, int cardIndex) {
       ? cardDataList[cardIndex]
       : cardDataList[0];
 
-  return Container(
-    width: 320,
-    height: 400,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30.0),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.20),
-          blurRadius: 14,
-          spreadRadius: 0,
-          offset: Offset(4, 8),
-        ),
-      ],
-      image: DecorationImage(
-        image: AssetImage(data.imagePath),
-        fit: BoxFit.cover,
+  return InkWell(
+    onTap: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DetailCardCarousel()),
       ),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Color(0xFFFCCC75),
-              borderRadius: BorderRadius.circular(100),
+    },
+    child: Container(
+      width: 320,
+      height: 400,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.20),
+            blurRadius: 14,
+            spreadRadius: 0,
+            offset: Offset(4, 8),
+          ),
+        ],
+        image: DecorationImage(
+          image: AssetImage(data.imagePath),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Color(0xFFFCCC75),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                "Free E-Book",
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            child: Text(
-              "Free E-Book",
+            Spacer(),
+            Text(
+              data.title,
               style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
               ),
             ),
-          ),
-          Spacer(),
-          Text(
-            data.title,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
+            Row(
+              children: [
+                Icon(Icons.timer_outlined, color: Colors.white),
+                Text(
+                  " ${data.duration}",
+                  style: GoogleFonts.poppins(color: Colors.white),
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 5),
-          Row(
-            children: [
-              Icon(Icons.timer_outlined, color: Colors.white),
-              Text(
-                " ${data.duration}",
-                style: GoogleFonts.poppins(color: Colors.white),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            height: 30,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: data.tags.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: badgeColors[index % badgeColors.length],
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    data.tags[index],
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            SizedBox(height: 10),
+            SizedBox(
+              height: 25,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: data.tags.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: badgeColors[index % badgeColors.length],
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      data.tags[index],
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage(data.imageModerator),
+                  ),
+                  SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data.nameModerator,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        data.positionModerator,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
