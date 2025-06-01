@@ -1,5 +1,6 @@
-import 'package:ajheryuk/providers/login_provider.dart';
+import 'package:ajheryuk/providers/general_provider.dart';
 import 'package:ajheryuk/screens/auth/signup.dart';
+import 'package:ajheryuk/screens/viewer_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +38,7 @@ class Login extends ConsumerWidget {
                           const SizedBox(height: 16),
                           _buildPasswordField(ref, obscurePassword),
                           const SizedBox(height: 40),
-                          _buildLoginButton(),
+                          _buildLoginButton(context),
                           const SizedBox(height: 24),
                           _buildForgotPasswordText(),
                           const SizedBox(height: 20),
@@ -116,7 +117,7 @@ class Login extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(context) {
     return FractionallySizedBox(
       widthFactor: 1.0,
       child: ElevatedButton(
@@ -125,7 +126,12 @@ class Login extends ConsumerWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ViewerScreens()),
+          );
+        },
         child: Text(
           'Log in',
           style: GoogleFonts.poppins(
