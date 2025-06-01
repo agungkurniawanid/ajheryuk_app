@@ -35,14 +35,14 @@ class CustomBottomNavigationBar extends ConsumerWidget {
               pageController,
             ),
             _buildNavItem(
-              'assets/bottomnavigation/message',
+              'assets/bottomnavigation/discovery',
               1,
               selectedIndex,
               ref,
               pageController,
             ),
             _buildNavItem(
-              'assets/bottomnavigation/discovery',
+              'assets/bottomnavigation/message',
               2,
               selectedIndex,
               ref,
@@ -90,7 +90,43 @@ class CustomBottomNavigationBar extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(iconPath, width: 28, height: 28),
+            index == 2
+                ? SizedBox(
+                    width: 40,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Image.asset(iconPath, width: 28, height: 28),
+                        Positioned(
+                          right: 0,
+                          top: -10,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                '9',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Image.asset(iconPath, width: 28, height: 28),
             const SizedBox(height: 10),
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),

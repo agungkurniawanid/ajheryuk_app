@@ -37,7 +37,7 @@ class _WidgetNavbarProfileState extends ConsumerState<WidgetNavbarProfile> {
                       ),
                       child: const CircleAvatar(
                         radius: 28,
-                        backgroundImage: AssetImage("assets/person/main.jpg"),
+                        backgroundImage: AssetImage("assets/person/bro.jpg"),
                       ),
                     ),
                   ),

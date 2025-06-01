@@ -1,3 +1,4 @@
+import 'package:ajheryuk/widgets/widget_card_course.dart';
 import 'package:ajheryuk/widgets/widget_category.dart';
 import 'package:ajheryuk/widgets/widget_navbar_profile.dart';
 import 'package:ajheryuk/widgets/widget_user_stream.dart';
@@ -52,6 +53,8 @@ class _DashboardState extends ConsumerState<Dashboard> {
               ),
             ),
             WidgetCategory(),
+            Spacer(),
+            WidgetCardCourse(),
           ],
         ),
       ),

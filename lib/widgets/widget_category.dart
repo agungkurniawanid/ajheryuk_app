@@ -74,7 +74,7 @@ Widget categoryItem(String text, bool isSelected) => Padding(
     child: Text(
       text,
       style: GoogleFonts.poppins(
-        fontSize: 18,
+        fontSize: 16,
         color: isSelected
             ? Colors.white
             : const Color.fromARGB(255, 98, 100, 100),
