@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:ajheryuk/models/carousels.dart';
+import 'package:ajheryuk/providers/general_provider.dart';
+import 'package:ajheryuk/providers/time_slot_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -134,26 +137,365 @@ class _DetailCardCarouselState extends ConsumerState<DetailCardCarousel> {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: ClipRRect(
-                    clipBehavior: Clip.none,
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEC5F5F),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text(
-                        "Follow Class",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                  child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(25),
+                          ),
+                        ),
+                        builder: (context) {
+                          return Consumer(
+                            builder: (context, ref, _) {
+                              final selectedIndex = ref.watch(timeSlotProvider);
+                              final List<String> timeSlots = [
+                                '08:00 AM',
+                                '10:00 AM',
+                                '12:00 PM',
+                                '02:00 PM',
+                                '04:00 PM',
+                                '06:00 PM',
+                                '08:00 PM',
+                                '10:00 PM',
+                                'Full Day',
+                              ];
+                              final List<bool> availableSlots = [
+                                true,
+                                true,
+                                true,
+                                true,
+                                false,
+                                true,
+                                false,
+                                true,
+                                true,
+                              ];
+
+                              return DraggableScrollableSheet(
+                                expand: false,
+                                initialChildSize: 0.8,
+                                minChildSize: 0.4,
+                                maxChildSize: 0.8,
+                                builder: (_, controller) => Container(
+                                  padding: const EdgeInsets.all(30),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25),
+                                    ),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    controller: controller,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 80,
+                                          height: 7,
+                                          margin: const EdgeInsets.only(
+                                            bottom: 20,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[400],
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Available time',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Adjust to your schedule",
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(18.0),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFF9D9FA0),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Color(
+                                                      0xFFEC5F5F,
+                                                    ).withOpacity(0.25),
+                                                    spreadRadius: 0,
+                                                    blurRadius: 14,
+                                                    offset: Offset(0, 5),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Icon(
+                                                Icons.calendar_month_outlined,
+                                                color: Colors.white,
+                                                size: 28,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        GridView.builder(
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3,
+                                                crossAxisSpacing: 12,
+                                                mainAxisSpacing: 12,
+                                                childAspectRatio: 0.9,
+                                              ),
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: 9,
+                                          itemBuilder: (context, index) {
+                                            final isSelected =
+                                                selectedIndex == index;
+                                            final isAvailable =
+                                                availableSlots[index];
+
+                                            return GestureDetector(
+                                              onTap: isAvailable
+                                                  ? () {
+                                                      ref
+                                                          .read(
+                                                            timeSlotProvider
+                                                                .notifier,
+                                                          )
+                                                          .selectTimeSlot(
+                                                            index,
+                                                          );
+                                                      HapticFeedback.lightImpact();
+                                                    }
+                                                  : null,
+                                              child: AnimatedContainer(
+                                                duration: const Duration(
+                                                  milliseconds: 200,
+                                                ),
+                                                curve: Curves.easeInOut,
+                                                decoration: BoxDecoration(
+                                                  color: isAvailable
+                                                      ? isSelected
+                                                            ? const Color(
+                                                                0xFFEC5F5F,
+                                                              )
+                                                            : const Color(
+                                                                0xFFEC5F5F,
+                                                              ).withOpacity(0.2)
+                                                      : Colors.grey[200],
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: isSelected
+                                                      ? Border.all(
+                                                          color: const Color(
+                                                            0xFFEC5F5F,
+                                                          ),
+                                                          width: 2,
+                                                        )
+                                                      : null,
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      isAvailable
+                                                          ? Icons.access_time
+                                                          : Icons.lock_outline,
+                                                      color: isAvailable
+                                                          ? isSelected
+                                                                ? Colors.white
+                                                                : const Color(
+                                                                    0xFFEC5F5F,
+                                                                  )
+                                                          : Colors.grey,
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Text(
+                                                      timeSlots[index],
+                                                      style: TextStyle(
+                                                        color: isAvailable
+                                                            ? isSelected
+                                                                  ? Colors.white
+                                                                  : Colors.black
+                                                            : Colors.grey,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Schedule date & time",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Consumer(
+                                              builder: (context, ref, _) {
+                                                final isChecked = ref.watch(
+                                                  checkboxProvider,
+                                                );
+
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    color: isChecked
+                                                        ? const Color(
+                                                            0xFFEC5F5F,
+                                                          ).withOpacity(0.2)
+                                                        : Colors.transparent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: isChecked
+                                                          ? const Color(
+                                                              0xFFEC5F5F,
+                                                            )
+                                                          : Colors
+                                                                .grey
+                                                                .shade400,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                  width: 24,
+                                                  height: 24,
+                                                  child: Theme(
+                                                    data: Theme.of(context).copyWith(
+                                                      checkboxTheme: CheckboxThemeData(
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                4,
+                                                              ),
+                                                        ),
+                                                        fillColor:
+                                                            MaterialStateProperty.all(
+                                                              const Color(
+                                                                0xFFEC5F5F,
+                                                              ),
+                                                            ),
+                                                        checkColor:
+                                                            MaterialStateProperty.all(
+                                                              Colors.white,
+                                                            ),
+                                                        overlayColor:
+                                                            MaterialStateProperty.all(
+                                                              Colors
+                                                                  .transparent,
+                                                            ),
+                                                        visualDensity:
+                                                            VisualDensity
+                                                                .compact,
+                                                      ),
+                                                    ),
+                                                    child: Transform.scale(
+                                                      scale: 0.9,
+                                                      child: Checkbox(
+                                                        value: isChecked,
+                                                        onChanged: (value) {
+                                                          ref
+                                                                  .read(
+                                                                    checkboxProvider
+                                                                        .notifier,
+                                                                  )
+                                                                  .state =
+                                                              value!;
+                                                        },
+                                                        side: BorderSide
+                                                            .none, // hilangkan border default
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: Text(
+                                                "12 October, 2020 at 09.45 AM",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: const Color(
+                                                    0xFF9D9FA0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        _buttonJoinClass(context),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEC5F5F),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          "Follow Class",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -166,6 +508,28 @@ class _DetailCardCarouselState extends ConsumerState<DetailCardCarousel> {
       ),
     );
   }
+}
+
+Widget _buttonJoinClass(context) {
+  return FractionallySizedBox(
+    widthFactor: 1.0,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFEC5F5F),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
+      onPressed: () {},
+      child: Text(
+        'Join & Save',
+        style: GoogleFonts.poppins(
+          fontSize: 16,
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _detailCourseCardAppBar(context) {

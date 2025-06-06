@@ -14,3 +14,5 @@ final pageControllerProvider = Provider<PageController>((ref) {
 });
 
 final obscurePasswordProvider = StateProvider<bool>((ref) => true);
+
+final checkboxProvider = StateProvider<bool>((ref) => true);
