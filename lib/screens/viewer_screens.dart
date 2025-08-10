@@ -34,8 +34,8 @@ class MainViewer extends ConsumerWidget {
 
     final pages = [
       const Center(child: Dashboard()),
-      const Center(child: Messages()),
       const Center(child: Discovery()),
+      const Center(child: MessagesScreen()),
       const Center(child: Profile()),
     ];
 
